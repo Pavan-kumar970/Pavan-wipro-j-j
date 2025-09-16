@@ -1,0 +1,113 @@
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+
+  /* 🌆 Background image with gradient overlay */
+  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)),
+    url("https://e1.pxfuel.com/desktop-wallpaper/594/70/desktop-wallpaper-wipro-launches-ai-and-ml-solutions-powered-by-aws-wipro.jpg")
+      no-repeat center center / cover;
+
+  animation: bgZoom 20s infinite alternate ease-in-out;
+}
+
+/* 🌟 Login Box Animations */
+.login-box {
+  background: rgba(255, 255, 255, 0.95);
+  padding: 2rem;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  width: 340px;
+  text-align: center;
+  transform: translateY(-50px);
+  opacity: 0;
+  animation: fadeSlideIn 1.2s ease forwards;
+}
+
+.login-box h2 {
+  margin-bottom: 1.2rem;
+  color: #111827;
+  font-weight: bold;
+}
+
+/* ✨ Inputs */
+.input-field {
+  width: 90%;
+  padding: 0.9rem;
+  margin-bottom: 1rem;
+  border-radius: 12px;
+  border: 1px solid #ccc;
+  outline: none;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.input-field:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 8px rgba(59, 130, 246, 0.5);
+  transform: scale(1.02);
+}
+
+/* 🎯 Button */
+button {
+  width: 100%;
+  padding: 0.9rem;
+  background: linear-gradient(135deg, #3b82f6, #9333ea);
+  border: none;
+  border-radius: 12px;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  background: linear-gradient(135deg, #2563eb, #7e22ce);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
+}
+
+.error-msg {
+  margin-top: 1rem;
+  color: red;
+  font-size: 0.9rem;
+  animation: shake 0.5s ease;
+}
+
+/* 🌈 Animations */
+@keyframes fadeSlideIn {
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes shake {
+  10%,
+  90% {
+    transform: translateX(-3px);
+  }
+  20%,
+  80% {
+    transform: translateX(6px);
+  }
+  30%,
+  50%,
+  70% {
+    transform: translateX(-6px);
+  }
+  40%,
+  60% {
+    transform: translateX(6px);
+  }
+}
+
+@keyframes bgZoom {
+  from {
+    background-size: 100% 100%;
+  }
+  to {
+    background-size: 110% 110%;
+  }
+}
