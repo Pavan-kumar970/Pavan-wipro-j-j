@@ -1,0 +1,126 @@
+<!-- chatbot.component.html -->
+<div class="chat-shell" [ngClass]="{ dark: darkMode }">
+  <!-- Sidebar / Controls -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="logo">📊</div>
+      <div class="title">Smart Excel Chatbot</div>
+    </div>
+
+    <div class="controls">
+      <label class="file-upload">
+        <input type="file" (change)="onFileSelected($event)" accept=".xlsx,.xls,.csv" />
+        <span>📁 Upload Excel file</span>
+      </label>
+
+      <button class="btn" (click)="quickPrompt('show me all rows')">Quick: Show All</button>
+      <button class="btn ghost" (click)="quickPrompt('show me summary')">Quick: Summary</button>
+
+      <div class="divider"></div>
+
+      <button class="btn red" (click)="clearChat()">🧹 Clear Chat</button>
+      <button class="btn" (click)="toggleTheme()">
+        {{ darkMode ? '☀️ Light' : '🌙 Dark' }}
+      </button>
+    </div>
+
+    <div class="meta">
+      <div>Messages: <strong>{{ messages.length }}</strong></div>
+      <div>Server: <strong>{{ serverStatus }}</strong></div>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="main">
+    <header class="main-header">
+      <div class="header-left">
+        <h1>Smart Excel Chatbot</h1>
+        <p class="subtitle">Ask questions about your spreadsheet — view results as tables or text</p>
+      </div>
+      <div class="header-right">
+        <span class="user-pill">👤 Team J&amp;J</span>
+      </div>
+    </header>
+
+    <section class="chat-area" #chatWindow>
+      <div *ngFor="let msg of messages; let i = index" class="msg-row" [ngClass]="msg.sender">
+        <div class="avatar" aria-hidden="true">
+          <span *ngIf="msg.sender === 'bot'">🤖</span>
+          <span *ngIf="msg.sender === 'user'">🙋</span>
+        </div>
+
+        <div class="bubble">
+          <div class="bubble-top">
+            <div class="sender">{{ msg.sender === 'bot' ? 'Bot' : 'You' }}</div>
+            <div class="ts">{{ formatTime(msg.time) }}</div>
+          </div>
+
+          <!-- TEXT -->
+          <div *ngIf="msg.type === 'text'" class="bubble-body">
+           <div [innerHTML]="sanitizeHtml(msg.text)"></div>
+
+          </div>
+
+          <!-- TABLE -->
+          <div *ngIf="msg.type === 'table'" class="bubble-body table-response">
+            <div class="table-controls">
+              <div class="left">
+                <button class="btn-xs" (click)="toggleTableCollapse(i)">
+                  {{ collapsedTables[i] ? 'Expand' : 'Collapse' }}
+                </button>
+                <button class="btn-xs" (click)="copyTable(i)">Copy</button>
+                <button class="btn-xs" (click)="exportTableCSV(i)">Export file</button>
+              </div>
+              <div class="right">
+                <input placeholder="Search table..." [(ngModel)]="tableSearch[i]" (input)="filterTable(i)" />
+              </div>
+            </div>
+
+            <div class="table-wrap" *ngIf="!collapsedTables[i]">
+              <table>
+                <thead>
+                  <tr>
+                    <th *ngFor="let h of getTableData(msg).headers">{{ h }}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let row of getTableData(msg).rows | slice:0:tableRowLimits[i]">
+                    <td *ngFor="let cell of row">{{ cell }}</td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <div class="table-footer" *ngIf="getTableData(msg).rows.length > tableRowLimits[i]">
+                <button class="btn-xs" (click)="showMoreRows(i)">Show more</button>
+              </div>
+            </div>
+
+            <div class="table-empty" *ngIf="getTableData(msg).rows.length === 0">
+              No rows to display.
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- typing -->
+      <div class="typing-row" *ngIf="loading">
+        <div class="avatar">🤖</div>
+        <div class="typing-bubble">
+          <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Composer -->
+    <footer class="composer">
+      <div class="composer-left">
+        <input type="text" placeholder="Type your excel question" [(ngModel)]="userInput" (keyup.enter)="sendMessage()" />
+      </div>
+
+      <div class="composer-right">
+        <button class="btn ghost" (click)="sendMessage()">Send ➤</button>
+      </div>
+    </footer>
+  </main>
+</div>
